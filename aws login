@@ -1,3 +1,69 @@
 aws amazon login
 aaliazoyao@gmail.com
 304_Lab!
+
+Certainly! Based on the `docker-compose.yml` you provided, here are some adjustments you might want to consider when setting up your HTML website on an AWS EC2 instance:
+
+### Adjusting for AWS Environment:
+
+1. **Security Groups:**
+   - In the AWS EC2 console, when configuring your instance, ensure that the security group allows inbound traffic on port 80 (HTTP) so that your website can be accessed. You can modify the existing security group or create a new one.
+
+2. **Key Pair:**
+   - When launching your EC2 instance, ensure that you use a key pair that you have access to. You'll use this key pair to connect to your instance securely.
+
+### Adjustments in Docker Compose File:
+
+3. **Expose Website Port:**
+   - In the `app` service section of your `docker-compose.yml`, ensure that the Docker container's port is exposed, and map it to the appropriate port on the host. Since you're running a Java application, it seems to be running on port 8080. Ensure that the Docker container's port and the mapped port on the host are configured correctly.
+
+   ```yaml
+   app:
+       # ... (existing configurations)
+       ports:
+           - "80:8080"
+   ```
+
+### Deploying Your Application:
+
+4. **Deploy the Docker Containers:**
+   - Once you've made the adjustments, copy your `docker-compose.yml` file and any necessary files (e.g., Dockerfile) to your EC2 instance.
+
+   ```bash
+   scp -i path/to/your/keypair.pem docker-compose.yml ec2-user@your-ec2-instance-ip:~/your-app-directory/
+   ```
+
+5. **Connect to Your EC2 Instance:**
+   - SSH into your EC2 instance using the key pair you configured.
+
+   ```bash
+   ssh -i path/to/your/keypair.pem ec2-user@your-ec2-instance-ip
+   ```
+
+6. **Navigate to Your App Directory:**
+   - Change to the directory where you copied your `docker-compose.yml` and Docker-related files.
+
+   ```bash
+   cd ~/your-app-directory/
+   ```
+
+7. **Run Docker Compose:**
+   - Run your Docker containers using Docker Compose.
+
+   ```bash
+   docker-compose up -d
+   ```
+
+8. **Access Your Website:**
+   - Find the public IP address or DNS name of your EC2 instance in the AWS Console.
+   - Open a web browser and navigate to the public IP address or DNS name.
+
+### Additional Considerations:
+
+9. **Domain Name and HTTPS:**
+   - If you have a domain name, consider configuring it to point to your EC2 instance's IP address. Additionally, you might want to set up HTTPS for secure communication.
+
+10. **Monitoring and Maintenance:**
+   - Consider setting up monitoring, logging, and automated backups for your application and database.
+
+Remember, these are general steps, and the actual adjustments might depend on the specifics of your application. Always refer to the AWS documentation for the most up-to-date information and best practices.
